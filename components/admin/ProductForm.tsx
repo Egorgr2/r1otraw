@@ -17,6 +17,7 @@ export type ProductFormData = {
   price: string;
   sizes: string[];
   is_available: boolean;
+  status: string;
   images: string[];
 };
 
@@ -27,6 +28,7 @@ const emptyForm: ProductFormData = {
   price: "",
   sizes: [],
   is_available: true,
+  status: "available",
   images: [],
 };
 
@@ -56,6 +58,7 @@ export function ProductForm({
         price: String(editingProduct.price),
         sizes: editingProduct.sizes ?? [],
         is_available: editingProduct.is_available,
+        status: editingProduct.status ?? "available",
         images: editingProduct.images ?? [],
       });
     } else {
@@ -126,7 +129,8 @@ export function ProductForm({
       category: form.category,
       price: Number(form.price),
       sizes: form.sizes,
-      is_available: form.is_available,
+      is_available: form.status === "available",
+      status: form.status,
       images: form.images,
       image_url: form.images[0] ?? null,
     };
@@ -233,13 +237,13 @@ export function ProductForm({
         </div>
       </Field>
 
-      <Field label="Наличие">
+      <Field label="Статус">
         <div className="flex gap-2">
           <button
             type="button"
-            onClick={() => setForm({ ...form, is_available: true })}
+            onClick={() => setForm({ ...form, status: "available" })}
             className={`flex-1 border py-2.5 text-[10px] uppercase tracking-wider ${
-              form.is_available
+              form.status === "available"
                 ? "border-white bg-white text-black"
                 : "border-surface-border text-muted"
             }`}
@@ -248,14 +252,25 @@ export function ProductForm({
           </button>
           <button
             type="button"
-            onClick={() => setForm({ ...form, is_available: false })}
+            onClick={() => setForm({ ...form, status: "preorder" })}
             className={`flex-1 border py-2.5 text-[10px] uppercase tracking-wider ${
-              !form.is_available
+              form.status === "preorder"
                 ? "border-white bg-white text-black"
                 : "border-surface-border text-muted"
             }`}
           >
-            Под заказ
+            Подзаказ
+          </button>
+          <button
+            type="button"
+            onClick={() => setForm({ ...form, status: "preorder_long" })}
+            className={`flex-1 border py-2.5 text-[10px] uppercase tracking-wider ${
+              form.status === "preorder_long"
+                ? "border-white bg-white text-black"
+                : "border-surface-border text-muted"
+            }`}
+          >
+            Предзаказ
           </button>
         </div>
       </Field>
