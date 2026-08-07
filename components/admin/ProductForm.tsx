@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   CATEGORIES,
   SIZES,
+  STORAGE_BUCKET,
 } from "@/lib/admin";
 import { uploadProductImage } from "@/lib/storage";
 import { supabase, type Product } from "@/lib/supabase";
@@ -69,6 +70,15 @@ export function ProductForm({
       setUploading(true);
       setError(null);
       try {
+        // Проверяем, существует ли bucket в Supabase Storage
+        const { data: buckets } = await supabase.storage.listBuckets();
+        const bucketExists = buckets?.some(b => b.name === STORAGE_BUCKET);
+        
+        if (!bucketExists) {
+          setError("Сначала создайте bucket 'product-images' в Supabase Storage или используйте URL-адреса изображений");
+          return;
+        }
+
         const urls = await Promise.all(
           list.map((file) =>
             uploadProductImage(file, editingProduct?.id)
@@ -333,7 +343,7 @@ export function ProductForm({
         disabled={saving || uploading}
         className="w-full bg-white py-3.5 text-[10px] font-medium uppercase tracking-street text-black disabled:opacity-40"
       >
-        {saving ? "Збереження..." : "Зберегти"}
+        {saving ? "Сохранение..." : "Сохранить"}
       </button>
     </form>
   );

@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { uploadReviewImage } from "@/lib/storage";
+import { STORAGE_BUCKET } from "@/lib/admin";
 import { supabase } from "@/lib/supabase";
 
 export function ReviewUpload() {
@@ -18,6 +19,15 @@ export function ReviewUpload() {
     setMessage(null);
 
     try {
+      // Проверяем, существует ли bucket в Supabase Storage
+      const { data: buckets } = await supabase.storage.listBuckets();
+      const bucketExists = buckets?.some(b => b.name === STORAGE_BUCKET);
+      
+      if (!bucketExists) {
+        setMessage("Сначала создайте bucket 'product-images' в Supabase Storage или используйте URL-адреса изображений");
+        return;
+      }
+
       const imageUrl = await uploadReviewImage(file);
       const { error } = await supabase
         .from("reviews")
