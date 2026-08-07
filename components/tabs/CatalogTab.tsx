@@ -37,7 +37,7 @@ export function CatalogTab() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-x-3 gap-y-5 px-4 pb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 pb-6">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
