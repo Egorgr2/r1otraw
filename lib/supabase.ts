@@ -18,6 +18,7 @@ export type Product = {
   sizes: string[] | null;
   is_available: boolean;
   is_new: boolean;
+  status: string;
   created_at: string;
 };
 

@@ -1,39 +1,73 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FilterToggle } from "@/components/FilterToggle";
+import { Filters } from "@/components/Filters";
+import { Sorting } from "@/components/Sorting";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 import { supabase, type Product } from "@/lib/supabase";
 
 export function CatalogTab() {
-  const [inStock, setInStock] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filterStatuses, setFilterStatuses] = useState<string[]>([]);
+  const [filterBrands, setFilterBrands] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
     setLoading(true);
-    supabase
-      .from("products")
-      .select("*")
-      .eq("is_available", inStock)
-      .order("created_at", { ascending: false })
+    
+    let query = supabase.from("products").select("*");
+
+    // Применяем фильтры
+    if (filterStatuses.length > 0) {
+      if (filterStatuses.includes("available")) {
+        query = query.eq("status", "available");
+      }
+      if (filterStatuses.includes("preorder")) {
+        query = query.eq("status", "preorder");
+      }
+      if (filterStatuses.includes("preorder_long")) {
+        query = query.eq("status", "preorder_long");
+      }
+    }
+
+    if (filterBrands.length > 0) {
+      query = query.in("brand", filterBrands);
+    }
+
+    // Применяем сортировку
+    if (sortBy === "price-asc") {
+      query = query.order("price", { ascending: true });
+    } else if (sortBy === "price-desc") {
+      query = query.order("price", { ascending: false });
+    } else {
+      query = query.order("created_at", { ascending: false });
+    }
+
+    query
       .then(({ data, error }: { data: Product[] | null; error: any }) => {
         if (!error) setProducts(data ?? []);
         setLoading(false);
       });
-  }, [inStock]);
+  }, [filterStatuses, filterBrands, sortBy]);
 
   return (
     <div>
-      <FilterToggle value={inStock} onChange={setInStock} />
+      <Sorting onSortChange={setSortBy} />
+      <Filters
+        onFilterChange={(filters) => {
+          setFilterStatuses(filters.statuses);
+          setFilterBrands(filters.brands);
+        }}
+      />
 
       {loading ? (
         <ProductGridSkeleton />
       ) : products.length === 0 ? (
         <div className="flex min-h-[40vh] items-center justify-center px-6 text-center">
           <p className="text-xs uppercase tracking-wider text-muted">
-            {inStock ? "Нет товаров в наличии" : "Нет товаров под заказ"}
+            Нет товаров по выбранным фильтрам
           </p>
         </div>
       ) : (

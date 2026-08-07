@@ -6,6 +6,7 @@ import { PinGate } from "@/components/admin/PinGate";
 import { ProductForm } from "@/components/admin/ProductForm";
 import { ProductTable } from "@/components/admin/ProductTable";
 import { ReviewUpload } from "@/components/admin/ReviewUpload";
+import { HomePageManager } from "@/components/admin/HomePageManager";
 import { clearAdminAuthenticated, isAdminAuthenticated } from "@/lib/admin";
 import { supabase, type Product } from "@/lib/supabase";
 
@@ -19,6 +20,7 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [activeSection, setActiveSection] = useState<"products" | "reviews" | "home">("products");
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -77,37 +79,81 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-lg flex-col gap-10">
-        <section className="border border-surface-border p-4">
-          <ProductForm
-            key={editingProduct?.id ?? "new"}
-            editingProduct={editingProduct}
-            onSaved={() => {
-              setEditingProduct(null);
-              fetchProducts();
-            }}
-            onCancelEdit={() => setEditingProduct(null)}
-          />
-        </section>
+      <div className="mx-auto flex max-w-lg flex-col gap-4 mb-4">
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setActiveSection("home")}
+            className={`flex-1 border py-2.5 text-[10px] uppercase tracking-wider ${
+              activeSection === "home"
+                ? "border-white bg-white text-black"
+                : "border-surface-border text-muted"
+            }`}
+          >
+            Главная
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveSection("products")}
+            className={`flex-1 border py-2.5 text-[10px] uppercase tracking-wider ${
+              activeSection === "products"
+                ? "border-white bg-white text-black"
+                : "border-surface-border text-muted"
+            }`}
+          >
+            Товары
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveSection("reviews")}
+            className={`flex-1 border py-2.5 text-[10px] uppercase tracking-wider ${
+              activeSection === "reviews"
+                ? "border-white bg-white text-black"
+                : "border-surface-border text-muted"
+            }`}
+          >
+            Отзывы
+          </button>
+        </div>
+      </div>
 
-        <section className="border border-surface-border p-4">
-          <h2 className="mb-4 text-xs uppercase tracking-street">
-            Все товары
-          </h2>
-          <ProductTable
-            products={products}
-            loading={loading}
-            onEdit={(p) => {
-              setEditingProduct(p);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            onDelete={handleDelete}
-          />
-        </section>
+      <div className="mx-auto flex max-w-lg flex flex-col gap-10">
+        {activeSection === "home" && <HomePageManager />}
+        {activeSection === "products" && (
+          <>
+            <section className="border border-surface-border p-4">
+              <ProductForm
+                key={editingProduct?.id ?? "new"}
+                editingProduct={editingProduct}
+                onSaved={() => {
+                  setEditingProduct(null);
+                  fetchProducts();
+                }}
+                onCancelEdit={() => setEditingProduct(null)}
+              />
+            </section>
 
-        <section className="border border-surface-border p-4">
-          <ReviewUpload />
-        </section>
+            <section className="border border-surface-border p-4">
+              <h2 className="mb-4 text-xs uppercase tracking-street">
+                Все товары
+              </h2>
+              <ProductTable
+                products={products}
+                loading={loading}
+                onEdit={(p) => {
+                  setEditingProduct(p);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                onDelete={handleDelete}
+              />
+            </section>
+          </>
+        )}
+        {activeSection === "reviews" && (
+          <section className="border border-surface-border p-4">
+            <ReviewUpload />
+          </section>
+        )}
       </div>
     </div>
   );
