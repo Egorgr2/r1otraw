@@ -48,6 +48,9 @@ export function ProductForm({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [availableBrands, setAvailableBrands] = useState<string[]>([]);
+  const [brandInput, setBrandInput] = useState("");
+  const [showBrandSuggestions, setShowBrandSuggestions] = useState(false);
 
   useEffect(() => {
     if (editingProduct) {
@@ -61,10 +64,25 @@ export function ProductForm({
         status: editingProduct.status ?? "available",
         images: editingProduct.images ?? [],
       });
+      setBrandInput(editingProduct.brand ?? "");
     } else {
       setForm(emptyForm);
+      setBrandInput("");
     }
   }, [editingProduct]);
+
+  useEffect(() => {
+    // Загружаем уникальные бренды из товаров
+    supabase
+      .from("products")
+      .select("brand")
+      .not("brand", "is", null)
+      .then(({ data }: { data: { brand: string }[] | null }) => {
+        const brands = data?.map(p => p.brand).filter(Boolean) || [];
+        const uniqueBrands = Array.from(new Set(brands));
+        setAvailableBrands(uniqueBrands.sort());
+      });
+  }, []);
 
   const handleFiles = useCallback(
     async (files: FileList | File[]) => {
@@ -182,11 +200,52 @@ export function ProductForm({
       </Field>
 
       <Field label="Бренд">
-        <input
-          value={form.brand}
-          onChange={(e) => setForm({ ...form, brand: e.target.value })}
-          className={inputClass}
-        />
+        <div className="relative">
+          <input
+            value={brandInput}
+            onChange={(e) => {
+              setBrandInput(e.target.value);
+              setForm({ ...form, brand: e.target.value });
+              setShowBrandSuggestions(true);
+            }}
+            onFocus={() => setShowBrandSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowBrandSuggestions(false), 200)}
+            className={inputClass}
+            placeholder="Начните вводить бренд..."
+          />
+          {showBrandSuggestions && brandInput && (
+            <div className="absolute z-10 w-full mt-1 bg-black border border-surface-border rounded max-h-48 overflow-y-auto">
+              {availableBrands
+                .filter(brand => brand.toLowerCase().includes(brandInput.toLowerCase()))
+                .map(brand => (
+                  <button
+                    key={brand}
+                    type="button"
+                    onClick={() => {
+                      setBrandInput(brand);
+                      setForm({ ...form, brand });
+                      setShowBrandSuggestions(false);
+                    }}
+                    className="w-full text-left px-3 py-2 text-xs text-white hover:bg-surface-raised"
+                  >
+                    {brand}
+                  </button>
+                ))}
+              {!availableBrands.some(brand => brand.toLowerCase().includes(brandInput.toLowerCase())) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForm({ ...form, brand: brandInput.trim() });
+                    setShowBrandSuggestions(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs text-muted hover:bg-surface-raised"
+                >
+                  + Добавить новый бренд: {brandInput.trim()}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </Field>
 
       <Field label="Категория">
