@@ -52,7 +52,7 @@ export function ProductPageClient({
 
     const size = selectedSize ?? "не указан";
     const text = encodeURIComponent(
-      `Привет, Хочу заказать: ${product.title}, размер: ${size}, цена: ${product.price}₴`
+      `Здравствуйте, хочу заказать: ${product.title}, размер: ${size}, цена: ${product.price}₴`
     );
     
     if (WebApp) {

@@ -8,8 +8,8 @@ type HeaderProps = {
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "catalog", label: "КАТАЛОГ" },
-  { id: "reviews", label: "ВІДГУКИ" },
-  { id: "seller", label: "ПРОДАВЕЦЬ" },
+  { id: "reviews", label: "ОТЗЫВЫ" },
+  { id: "seller", label: "ПРОДАВЕЦ" },
 ];
 
 export function Header({ shopName, activeTab, onTabChange }: HeaderProps) {
