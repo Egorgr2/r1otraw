@@ -1,6 +1,6 @@
 export const ADMIN_AUTH_KEY = "admin_auth";
 
-export const CATEGORIES = ["Футболки", "Худі", "Взуття", "Інше"] as const;
+export const CATEGORIES = ["Футболки", "Худи", "Обувь", "Другое"] as const;
 export const SIZES = ["S", "M", "L", "XL"] as const;
 export const STORAGE_BUCKET = "product-images";
 

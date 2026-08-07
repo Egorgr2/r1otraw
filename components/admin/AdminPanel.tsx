@@ -72,7 +72,7 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
             }}
             className="text-[10px] uppercase tracking-wider text-muted underline"
           >
-            Вийти
+            Выйти
           </button>
         </div>
       </div>
@@ -92,7 +92,7 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
 
         <section className="border border-surface-border p-4">
           <h2 className="mb-4 text-xs uppercase tracking-street">
-            Всі товари
+            Все товары
           </h2>
           <ProductTable
             products={products}

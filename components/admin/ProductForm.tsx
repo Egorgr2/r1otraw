@@ -76,7 +76,7 @@ export function ProductForm({
         );
         setForm((prev) => ({ ...prev, images: [...prev.images, ...urls] }));
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Помилка завантаження");
+        setError(err instanceof Error ? err.message : "Ошибка загрузки");
       } finally {
         setUploading(false);
       }
@@ -103,7 +103,7 @@ export function ProductForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim() || !form.price) {
-      setError("Заповніть назву та ціну");
+      setError("Заполните название и цену");
       return;
     }
 
@@ -142,7 +142,7 @@ export function ProductForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <h2 className="text-xs uppercase tracking-street">
-        {editingProduct ? "Редагувати товар" : "Новий товар"}
+        {editingProduct ? "Редактировать товар" : "Новый товар"}
       </h2>
 
       {editingProduct && (
@@ -154,11 +154,11 @@ export function ProductForm({
           }}
           className="self-start text-[10px] uppercase tracking-wider text-muted underline"
         >
-          Скасувати редагування
+          Отменить редактирование
         </button>
       )}
 
-      <Field label="Назва">
+      <Field label="Название">
         <input
           value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
@@ -175,7 +175,7 @@ export function ProductForm({
         />
       </Field>
 
-      <Field label="Категорія">
+      <Field label="Категория">
         <select
           value={form.category}
           onChange={(e) => setForm({ ...form, category: e.target.value })}
@@ -189,7 +189,7 @@ export function ProductForm({
         </select>
       </Field>
 
-      <Field label="Ціна (₴)">
+      <Field label="Цена (₴)">
         <input
           type="number"
           min={0}
@@ -200,7 +200,7 @@ export function ProductForm({
         />
       </Field>
 
-      <Field label="Розміри">
+      <Field label="Размеры">
         <div className="flex gap-2">
           {SIZES.map((size) => (
             <label
@@ -223,7 +223,7 @@ export function ProductForm({
         </div>
       </Field>
 
-      <Field label="Наявність">
+      <Field label="Наличие">
         <div className="flex gap-2">
           <button
             type="button"
@@ -234,7 +234,7 @@ export function ProductForm({
                 : "border-surface-border text-muted"
             }`}
           >
-            В наявності
+            В наличии
           </button>
           <button
             type="button"
@@ -245,7 +245,7 @@ export function ProductForm({
                 : "border-surface-border text-muted"
             }`}
           >
-            Під замовлення
+            Под заказ
           </button>
         </div>
       </Field>
@@ -260,7 +260,7 @@ export function ProductForm({
           }}
           className="flex cursor-pointer flex-col items-center justify-center border border-dashed border-surface-border py-8 text-xs text-muted transition-colors hover:border-white"
         >
-          {uploading ? "Завантаження..." : "Натисніть або перетягніть фото"}
+          {uploading ? "Загрузка..." : "Нажмите или перетащите фото"}
         </div>
         <input
           ref={fileRef}
