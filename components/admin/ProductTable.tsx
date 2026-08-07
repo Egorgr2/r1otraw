@@ -18,7 +18,7 @@ export function ProductTable({
   if (loading) {
     return (
       <div className="py-8 text-center text-xs text-muted">
-        Завантаження...
+        Загрузка...
       </div>
     );
   }
@@ -26,7 +26,7 @@ export function ProductTable({
   if (products.length === 0) {
     return (
       <div className="py-8 text-center text-xs text-muted">
-        Товарів поки немає
+        Товаров пока нет
       </div>
     );
   }
@@ -37,9 +37,9 @@ export function ProductTable({
         <thead>
           <tr className="border-b border-surface-border text-[10px] uppercase tracking-wider text-muted">
             <th className="pb-3 pr-4 font-medium">Фото</th>
-            <th className="pb-3 pr-4 font-medium">Назва</th>
-            <th className="pb-3 pr-4 font-medium">Ціна</th>
-            <th className="pb-3 font-medium">Дії</th>
+            <th className="pb-3 pr-4 font-medium">Название</th>
+            <th className="pb-3 pr-4 font-medium">Цена</th>
+            <th className="pb-3 font-medium">Действия</th>
           </tr>
         </thead>
         <tbody>
@@ -77,16 +77,16 @@ export function ProductTable({
                       onClick={() => onEdit(product)}
                       className="border border-surface-border px-2 py-1 text-[10px] uppercase tracking-wider hover:border-white"
                     >
-                      Редагувати
+                      Редактировать
                     </button>
                     <button
                       type="button"
                       onClick={() => {
-                        if (confirm("Видалити товар?")) onDelete(product.id);
+                        if (confirm("Удалить товар?")) onDelete(product.id);
                       }}
                       className="border border-red-900 px-2 py-1 text-[10px] uppercase tracking-wider text-red-400 hover:border-red-400"
                     >
-                      Видалити
+                      Удалить
                     </button>
                   </div>
                 </td>

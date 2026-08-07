@@ -270,6 +270,39 @@ export function ProductForm({
           className="hidden"
           onChange={(e) => e.target.files && handleFiles(e.target.files)}
         />
+        
+        <div className="mt-2">
+          <label className="block mb-1 text-xs text-muted">Или добавьте URL изображения:</label>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              className="flex-1 border border-surface-border bg-black px-3 py-2 text-xs text-white placeholder:text-muted focus:border-white focus:outline-none"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const input = e.target as HTMLInputElement;
+                  if (input.value.trim()) {
+                    setForm((prev) => ({ ...prev, images: [...prev.images, input.value.trim()] }));
+                    input.value = '';
+                  }
+                }
+              }}
+            />
+            <button
+              type="button"
+              onClick={(e) => {
+                const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                if (input.value.trim()) {
+                  setForm((prev) => ({ ...prev, images: [...prev.images, input.value.trim()] }));
+                  input.value = '';
+                }
+              }}
+              className="border border-surface-border px-3 py-2 text-xs uppercase tracking-wider hover:border-white"
+            >
+              Добавить
+            </button>
+          </div>
+        </div>
         {form.images.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-2">
             {form.images.map((url) => (
