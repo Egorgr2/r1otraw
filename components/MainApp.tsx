@@ -34,7 +34,7 @@ export function MainApp({
       {activeTab === "seller" && (
         <SellerTab
           photo={sellerPhoto}
-          name={shopName}
+          name={sellerUsername}
           description={sellerDescription}
           username={sellerUsername}
         />

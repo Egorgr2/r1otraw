@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatSizes, getProductImages, type Product } from "@/lib/supabase";
+import { getProductImages, type Product } from "@/lib/supabase";
 
 type ProductCardProps = {
   product: Product;
@@ -7,7 +7,7 @@ type ProductCardProps = {
 
 export function ProductCard({ product }: ProductCardProps) {
   const images = getProductImages(product);
-  const sizesText = formatSizes(product.sizes);
+  const sizes = product.sizes ?? [];
 
   return (
     <Link
@@ -38,15 +38,26 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
         )}
       </div>
-      <div className="mt-3 flex flex-col gap-1">
+      <div className="mt-3 flex flex-col gap-2">
         <h3 className="line-clamp-2 text-xs font-medium uppercase tracking-wide">
           {product.title}
         </h3>
         <p className="text-sm font-bold">{product.price} ₴</p>
-        {sizesText && (
-          <p className="text-[10px] text-muted">{sizesText}</p>
+        
+        {sizes.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {sizes.map((size) => (
+              <span
+                key={size}
+                className="w-6 h-6 flex items-center justify-center text-[10px] font-bold border rounded bg-white text-black"
+              >
+                {size}
+              </span>
+            ))}
+          </div>
         )}
-        <button className="mt-2 w-full bg-white py-2 text-[10px] font-bold uppercase tracking-wider text-black transition-colors hover:bg-gray-200 active:bg-gray-300 rounded">
+        
+        <button className="mt-1 w-full bg-white py-2 text-[10px] font-bold uppercase tracking-wider text-black transition-colors hover:bg-gray-200 active:bg-gray-300 rounded">
           Подробнее
         </button>
       </div>

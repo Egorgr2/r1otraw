@@ -29,18 +29,18 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-[3/4] items-center justify-center bg-surface-raised text-xs text-muted">
+      <div className="flex aspect-square items-center justify-center bg-surface-raised text-xs text-muted">
         Нет фото
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="px-4 py-4">
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex aspect-[3/4] snap-x snap-mandatory overflow-x-auto scrollbar-hide"
+        className="flex aspect-square snap-x snap-mandatory overflow-x-auto scrollbar-hide rounded-lg overflow-hidden"
       >
         {images.map((src, i) => (
           // eslint-disable-next-line @next/next/no-img-element
@@ -55,13 +55,13 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       </div>
 
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto px-4 py-3 scrollbar-hide">
+        <div className="flex gap-2 overflow-x-auto pt-3 scrollbar-hide">
           {images.map((src, i) => (
             <button
               key={src + i}
               type="button"
               onClick={() => scrollTo(i)}
-              className={`h-14 w-14 shrink-0 overflow-hidden border transition-colors ${
+              className={`h-16 w-16 shrink-0 overflow-hidden border-2 rounded-lg transition-colors ${
                 activeIndex === i ? "border-white" : "border-surface-border opacity-60"
               }`}
             >

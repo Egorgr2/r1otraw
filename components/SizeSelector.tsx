@@ -16,10 +16,10 @@ export function SizeSelector({ sizes, selected, onSelect }: SizeSelectorProps) {
             key={size}
             type="button"
             onClick={() => onSelect(size)}
-            className={`min-w-[3rem] border px-4 py-2.5 text-xs uppercase tracking-wider transition-colors ${
+            className={`w-12 h-12 flex items-center justify-center border text-xs font-bold uppercase tracking-wider transition-colors rounded ${
               selected === size
                 ? "border-white bg-white text-black"
-                : "border-surface-border text-white active:border-white"
+                : "border-surface-border text-white hover:border-white"
             }`}
           >
             {size}

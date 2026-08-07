@@ -52,7 +52,7 @@ export function ProductPageClient({
 
     const size = selectedSize ?? "не указан";
     const text = encodeURIComponent(
-      `Здравствуйте, хочу заказать: ${product.title}, размер: ${size}, цена: ${product.price}₴`
+      `Привет, хочу заказать: ${product.title}, размер: ${size}, цена: ${product.price}₴`
     );
     
     if (WebApp) {
@@ -84,7 +84,7 @@ export function ProductPageClient({
   const sizes = product.sizes ?? [];
 
   return (
-    <div className="min-h-screen pb-8">
+    <div className="min-h-screen pb-8 bg-black">
       <div className="sticky top-0 z-10 flex items-center border-b border-surface-border bg-black/95 px-4 py-3 backdrop-blur-sm">
         <Link
           href="/"
@@ -96,16 +96,23 @@ export function ProductPageClient({
 
       <ProductGallery images={images} title={product.title} />
 
-      <div className="flex flex-col gap-4 px-4 py-5">
-        <div>
-          <h1 className="text-sm font-medium uppercase tracking-wide">
-            {product.title}
-          </h1>
-          <p className="mt-1 text-lg font-medium">{product.price} ₴</p>
+      <div className="flex flex-col gap-6 px-4 py-6">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <h1 className="text-base font-bold uppercase tracking-wide">
+              {product.title}
+            </h1>
+            <p className="mt-2 text-2xl font-bold">{product.price} ₴</p>
+          </div>
+          {product.is_new && (
+            <span className="bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-black rounded">
+              NEW
+            </span>
+          )}
         </div>
 
         {(product.brand || product.category) && (
-          <div className="flex flex-col gap-1 text-xs text-muted">
+          <div className="flex gap-4 text-xs text-muted">
             {product.brand && (
               <p>
                 <span className="uppercase tracking-wider">Бренд: </span>
@@ -121,19 +128,21 @@ export function ProductPageClient({
           </div>
         )}
 
-        <SizeSelector
-          sizes={sizes}
-          selected={selectedSize}
-          onSelect={setSelectedSize}
-        />
+        <div className="border-t border-surface-border pt-6">
+          <SizeSelector
+            sizes={sizes}
+            selected={selectedSize}
+            onSelect={setSelectedSize}
+          />
+        </div>
 
         <button
           type="button"
           onClick={handleOrder}
           disabled={sizes.length > 0 && !selectedSize}
-          className="mt-2 w-full bg-white py-4 text-[11px] font-bold uppercase tracking-street text-black transition-opacity disabled:cursor-not-allowed disabled:opacity-40 active:opacity-80"
+          className="w-full bg-white py-4 text-[12px] font-bold uppercase tracking-street text-black transition-opacity disabled:cursor-not-allowed disabled:opacity-40 active:opacity-80 rounded-lg"
         >
-          ЗАМОВИТИ
+          ЗАКАЗАТЬ
         </button>
       </div>
     </div>
