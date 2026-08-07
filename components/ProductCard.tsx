@@ -42,6 +42,11 @@ export function ProductCard({ product }: ProductCardProps) {
         <h3 className="line-clamp-2 text-xs font-medium uppercase tracking-wide">
           {product.title}
         </h3>
+        {product.brand && (
+          <p className="text-[10px] font-bold uppercase tracking-wider text-muted">
+            {product.brand}
+          </p>
+        )}
         <p className="text-sm font-bold">{product.price} ₴</p>
         
         {sizes.length > 0 && (

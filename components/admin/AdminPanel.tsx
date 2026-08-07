@@ -6,7 +6,6 @@ import { PinGate } from "@/components/admin/PinGate";
 import { ProductForm } from "@/components/admin/ProductForm";
 import { ProductTable } from "@/components/admin/ProductTable";
 import { ReviewUpload } from "@/components/admin/ReviewUpload";
-import { HomePageManager } from "@/components/admin/HomePageManager";
 import { clearAdminAuthenticated, isAdminAuthenticated } from "@/lib/admin";
 import { supabase, type Product } from "@/lib/supabase";
 
@@ -20,7 +19,7 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [activeSection, setActiveSection] = useState<"products" | "reviews" | "home">("products");
+  const [activeSection, setActiveSection] = useState<"products" | "reviews">("products");
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -83,17 +82,6 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
         <div className="flex gap-2">
           <button
             type="button"
-            onClick={() => setActiveSection("home")}
-            className={`flex-1 border py-2.5 text-[10px] uppercase tracking-wider ${
-              activeSection === "home"
-                ? "border-white bg-white text-black"
-                : "border-surface-border text-muted"
-            }`}
-          >
-            Главная
-          </button>
-          <button
-            type="button"
             onClick={() => setActiveSection("products")}
             className={`flex-1 border py-2.5 text-[10px] uppercase tracking-wider ${
               activeSection === "products"
@@ -118,7 +106,6 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
       </div>
 
       <div className="mx-auto flex max-w-lg flex flex-col gap-10">
-        {activeSection === "home" && <HomePageManager />}
         {activeSection === "products" && (
           <>
             <section className="border border-surface-border p-4">

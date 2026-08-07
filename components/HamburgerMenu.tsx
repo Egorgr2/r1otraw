@@ -77,8 +77,6 @@ const MENU_ITEMS: MenuItem[] = [
     ],
   },
   { id: "reviews", label: "Отзывы", path: "/reviews" },
-  { id: "contacts", label: "Контакты", path: "/contacts" },
-  { id: "order-info", label: "Информация о заказах", path: "/order-info" },
 ];
 
 type MenuProps = {
