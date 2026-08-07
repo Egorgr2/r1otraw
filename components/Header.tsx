@@ -18,13 +18,14 @@ export function Header({ shopName }: HeaderProps) {
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
-            className="text-white hover:text-muted"
+            className="flex items-center gap-2 text-white hover:text-muted"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="3" y1="12" x2="21" y2="12" />
               <line x1="3" y1="6" x2="21" y2="6" />
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
+            <span className="text-[10px] font-medium uppercase tracking-wider">Меню</span>
           </button>
           
           <Link href="/" className="text-sm font-medium uppercase tracking-street text-white hover:text-muted">
