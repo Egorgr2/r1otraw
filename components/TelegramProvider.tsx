@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect } from "react";
-import WebApp from "@twa-dev/sdk";
 
 export function TelegramProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    WebApp.ready();
-    WebApp.expand();
-    WebApp.setHeaderColor("#000000");
-    WebApp.setBackgroundColor("#000000");
+    // Dynamic import to avoid SSR issues
+    import("@twa-dev/sdk").then((WebApp) => {
+      WebApp.default.ready();
+      WebApp.default.expand();
+      WebApp.default.setHeaderColor("#000000");
+      WebApp.default.setBackgroundColor("#000000");
+    });
   }, []);
 
   return <>{children}</>;
