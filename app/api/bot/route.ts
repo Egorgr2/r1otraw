@@ -49,12 +49,12 @@ function createBot() {
     const shopName = process.env.NEXT_PUBLIC_SHOP_NAME ?? "Resale Shop";
 
     const caption =
-      `👋 Вітаємо в ${shopName}!\n\n` +
-      `Винтаж і реселл одягу.\n` +
-      `Натисни кнопку нижче, щоб відкрити каталог.`;
+      `👋 Добро пожаловать в ${shopName}!\n\n` +
+      `Винтаж и реселл одежды.\n` +
+      `Нажмите кнопку ниже, чтобы открыть каталог.`;
 
     const keyboard = new InlineKeyboard().webApp(
-      "Відкрити каталог",
+      "Открыть каталог",
       webAppUrl ?? "https://your-app.vercel.app"
     );
 

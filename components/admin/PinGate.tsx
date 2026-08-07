@@ -54,7 +54,7 @@ export function PinGate({ expectedPin, onSuccess }: PinGateProps) {
           disabled={pin.length !== 4}
           className="mt-4 w-full bg-white py-3 text-[10px] font-medium uppercase tracking-street text-black disabled:opacity-40"
         >
-          Увійти
+          Войти
         </button>
       </form>
     </div>
