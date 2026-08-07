@@ -69,6 +69,40 @@ function createBot() {
     }
   });
 
+  bot.command("help", async (ctx) => {
+    const shopName = process.env.NEXT_PUBLIC_SHOP_NAME ?? "Resale Shop";
+    const webAppUrl = process.env.WEBAPP_URL;
+
+    const helpText =
+      `📖 Справка по ${shopName}\n\n` +
+      `Доступные команды:\n` +
+      `/start - Открыть магазин\n` +
+      `/help - Эта справка\n\n` +
+      `💾 Реплики и товары высокого качества`;
+
+    const keyboard = new InlineKeyboard().webApp(
+      "Открыть магазин",
+      webAppUrl ?? "https://your-app.vercel.app"
+    );
+
+    await ctx.reply(helpText, { reply_markup: keyboard });
+  });
+
+  bot.on("message:text", async (ctx) => {
+    const webAppUrl = process.env.WEBAPP_URL;
+    const shopName = process.env.NEXT_PUBLIC_SHOP_NAME ?? "Resale Shop";
+
+    const keyboard = new InlineKeyboard().webApp(
+      "Открыть магазин",
+      webAppUrl ?? "https://your-app.vercel.app"
+    );
+
+    await ctx.reply(
+      `Напишите /start для открытия ${shopName}`,
+      { reply_markup: keyboard }
+    );
+  });
+
   return bot;
 }
 
