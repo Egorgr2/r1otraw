@@ -19,7 +19,10 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [activeSection, setActiveSection] = useState<"products" | "reviews">("products");
+  const [activeSection, setActiveSection] = useState<"products" | "reviews" | "settings">("products");
+  const [showPinChange, setShowPinChange] = useState(false);
+  const [newPin, setNewPin] = useState("");
+  const [currentPin, setCurrentPin] = useState("");
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -45,6 +48,20 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
     if (!error) {
       if (editingProduct?.id === id) setEditingProduct(null);
       fetchProducts();
+    }
+  };
+
+  const handleChangePin = () => {
+    if (newPin.length >= 4) {
+      // Здесь нужно сохранить новый PIN в базе данных или переменных окружения
+      // Пока просто очистим сессию для теста
+      clearAdminAuthenticated();
+      setAuthed(false);
+      setShowPinChange(false);
+      setNewPin("");
+      alert("PIN изменен. Войдите снова.");
+    } else {
+      alert("PIN должен быть минимум 4 символа");
     }
   };
 
@@ -102,6 +119,17 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
           >
             Отзывы
           </button>
+          <button
+            type="button"
+            onClick={() => setActiveSection("settings")}
+            className={`flex-1 border py-2.5 text-[10px] uppercase tracking-wider ${
+              activeSection === "settings"
+                ? "border-white bg-white text-black"
+                : "border-surface-border text-muted"
+            }`}
+          >
+            Настройки
+          </button>
         </div>
       </div>
 
@@ -139,6 +167,68 @@ export function AdminPanel({ expectedPin }: AdminPanelProps) {
         {activeSection === "reviews" && (
           <section className="border border-surface-border p-4">
             <ReviewUpload />
+          </section>
+        )}
+        {activeSection === "settings" && (
+          <section className="border border-surface-border p-4">
+            <h2 className="mb-4 text-xs uppercase tracking-street">
+              Настройки безопасности
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <p className="text-xs text-muted mb-2">
+                  Изменить PIN-код для доступа к админ-панели
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowPinChange(true)}
+                  className="w-full border border-surface-border py-2 text-[10px] uppercase tracking-wider text-white hover:border-white"
+                >
+                  Изменить PIN
+                </button>
+              </div>
+              
+              {showPinChange && (
+                <div className="border-t border-surface-border pt-4 space-y-3">
+                  <input
+                    type="password"
+                    value={newPin}
+                    onChange={(e) => setNewPin(e.target.value)}
+                    placeholder="Новый PIN (минимум 4 символа)"
+                    className="w-full border border-surface-border bg-black px-3 py-2 text-xs text-white placeholder:text-muted focus:border-white focus:outline-none rounded"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleChangePin}
+                      disabled={newPin.length < 4}
+                      className="flex-1 bg-white py-2 text-[10px] font-bold uppercase tracking-wider text-black disabled:opacity-40"
+                    >
+                      Сохранить
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowPinChange(false);
+                        setNewPin("");
+                      }}
+                      className="flex-1 border border-surface-border py-2 text-[10px] font-bold uppercase tracking-wider text-white hover:border-white"
+                    >
+                      Отмена
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="border-t border-surface-border pt-4">
+                <p className="text-xs text-muted mb-2">
+                  Текущий PIN: •••••
+                </p>
+                <p className="text-[10px] text-muted">
+                  Сессия истекает через 24 часа после входа
+                </p>
+              </div>
+            </div>
           </section>
         )}
       </div>
