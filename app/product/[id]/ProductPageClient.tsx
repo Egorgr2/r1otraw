@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Header } from "@/components/Header";
 import { ProductGallery } from "@/components/ProductGallery";
 import { SizeSelector } from "@/components/SizeSelector";
 import { ProductPageSkeleton } from "@/components/ui/Skeleton";
@@ -21,6 +22,7 @@ export function ProductPageClient({
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [error, setError] = useState(false);
   const [WebApp, setWebApp] = useState<any>(null);
+  const shopName = process.env.NEXT_PUBLIC_SHOP_NAME || "R1OTRAW";
 
   useEffect(() => {
     import("@twa-dev/sdk").then((module) => {
@@ -88,9 +90,17 @@ export function ProductPageClient({
       <div className="sticky top-0 z-10 flex items-center border-b border-surface-border bg-black/95 px-4 py-3 backdrop-blur-sm">
         <Link
           href="/"
-          className="text-[10px] uppercase tracking-street text-muted"
+          className="text-white hover:text-muted mr-4"
         >
-          ← Назад
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </Link>
+        <Link
+          href="/"
+          className="text-sm font-medium uppercase tracking-street text-white hover:text-muted"
+        >
+          {shopName}
         </Link>
       </div>
 
@@ -108,6 +118,11 @@ export function ProductPageClient({
                 <h1 className="text-xl md:text-2xl font-bold uppercase tracking-wide">
                   {product.title}
                 </h1>
+                {product.brand && (
+                  <p className="mt-2 text-sm font-bold uppercase tracking-wider text-muted">
+                    {product.brand}
+                  </p>
+                )}
                 <p className="mt-3 text-3xl md:text-4xl font-bold">{product.price} ₴</p>
               </div>
               {product.is_new && (
@@ -124,20 +139,12 @@ export function ProductPageClient({
               </span>
             )}
 
-            {(product.brand || product.category) && (
+            {product.category && (
               <div className="flex flex-wrap gap-4 text-sm text-muted">
-                {product.brand && (
-                  <p>
-                    <span className="uppercase tracking-wider">Бренд: </span>
-                    {product.brand}
-                  </p>
-                )}
-                {product.category && (
-                  <p>
-                    <span className="uppercase tracking-wider">Категория: </span>
-                    {product.category}
-                  </p>
-                )}
+                <p>
+                  <span className="uppercase tracking-wider">Категория: </span>
+                  {product.category}
+                </p>
               </div>
             )}
 

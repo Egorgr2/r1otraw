@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { Header } from "@/components/Header";
 import { Filters } from "@/components/Filters";
 import { Sorting } from "@/components/Sorting";
 import { ProductCard } from "@/components/ProductCard";
@@ -11,6 +12,7 @@ import { supabase, type Product } from "@/lib/supabase";
 function CatalogContent() {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
+  const shopName = process.env.NEXT_PUBLIC_SHOP_NAME || "R1OTRAW";
   
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,20 +68,36 @@ function CatalogContent() {
 
   return (
     <div className="min-h-screen pb-6">
-      <div className="px-4 py-4 border-b border-surface-border">
+      <Header shopName={shopName} />
+      <div className="sticky top-0 z-10 flex items-center border-b border-surface-border bg-black/95 px-4 py-3 backdrop-blur-sm">
+        <button
+          type="button"
+          onClick={() => window.location.href = "/"}
+          className="text-white hover:text-muted mr-4"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
         <h1 className="text-sm font-bold uppercase tracking-street">
           {categoryTitle}
         </h1>
       </div>
 
       <div className="px-4 py-4">
-        <Sorting onSortChange={setSortBy} />
-        <Filters
-          onFilterChange={(filters) => {
-            setFilterStatuses(filters.statuses);
-            setFilterBrands(filters.brands);
-          }}
-        />
+        <div className="flex gap-2 mb-4">
+          <div className="flex-1">
+            <Filters
+              onFilterChange={(filters) => {
+                setFilterStatuses(filters.statuses);
+                setFilterBrands(filters.brands);
+              }}
+            />
+          </div>
+          <div className="flex-1">
+            <Sorting onSortChange={setSortBy} />
+          </div>
+        </div>
 
         {loading ? (
           <ProductGridSkeleton />
