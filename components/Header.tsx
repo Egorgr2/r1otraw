@@ -1,4 +1,4 @@
-export type Tab = "catalog" | "reviews" | "seller";
+export type Tab = "home" | "catalog" | "reviews" | "seller";
 
 type HeaderProps = {
   shopName: string;
@@ -7,6 +7,7 @@ type HeaderProps = {
 };
 
 const TABS: { id: Tab; label: string }[] = [
+  { id: "home", label: "ГЛАВНАЯ" },
   { id: "catalog", label: "КАТАЛОГ" },
   { id: "reviews", label: "ОТЗЫВЫ" },
   { id: "seller", label: "ПРОДАВЕЦ" },

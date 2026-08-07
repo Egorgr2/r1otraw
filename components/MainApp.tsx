@@ -5,6 +5,7 @@ import { Header, type Tab } from "@/components/Header";
 import { CatalogTab } from "@/components/tabs/CatalogTab";
 import { ReviewsTab } from "@/components/tabs/ReviewsTab";
 import { SellerTab } from "@/components/tabs/SellerTab";
+import { HomePage } from "@/components/HomePage";
 
 type MainAppProps = {
   shopName: string;
@@ -19,7 +20,7 @@ export function MainApp({
   sellerPhoto,
   sellerDescription,
 }: MainAppProps) {
-  const [activeTab, setActiveTab] = useState<Tab>("catalog");
+  const [activeTab, setActiveTab] = useState<Tab>("home");
 
   return (
     <main className="min-h-screen pb-6">
@@ -29,6 +30,7 @@ export function MainApp({
         onTabChange={setActiveTab}
       />
 
+      {activeTab === "home" && <HomePage />}
       {activeTab === "catalog" && <CatalogTab />}
       {activeTab === "reviews" && <ReviewsTab />}
       {activeTab === "seller" && (
