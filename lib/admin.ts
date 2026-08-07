@@ -3,6 +3,7 @@ export const ADMIN_AUTH_KEY = "admin_auth";
 export const CATEGORIES = ["Футболки", "Худи", "Обувь", "Другое"] as const;
 export const SIZES = ["S", "M", "L", "XL"] as const;
 export const STORAGE_BUCKET = "product-images";
+export const DISABLE_STORAGE_UPLOAD = true; // Временно отключаем загрузку в Storage
 
 export function isAdminAuthenticated(): boolean {
   if (typeof window === "undefined") return false;

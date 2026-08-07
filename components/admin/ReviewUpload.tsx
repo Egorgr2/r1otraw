@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { uploadReviewImage } from "@/lib/storage";
-import { STORAGE_BUCKET } from "@/lib/admin";
+import { STORAGE_BUCKET, DISABLE_STORAGE_UPLOAD } from "@/lib/admin";
 import { supabase } from "@/lib/supabase";
 
 export function ReviewUpload() {
@@ -14,6 +14,12 @@ export function ReviewUpload() {
   const handleUpload = useCallback(async (files: FileList | File[]) => {
     const file = Array.from(files).find((f) => f.type.startsWith("image/"));
     if (!file) return;
+
+    // Если загрузка в Storage отключена, показываем сообщение
+    if (DISABLE_STORAGE_UPLOAD) {
+      setMessage("Загрузка файлов временно отключена. Используйте поле для URL-адреса изображений.");
+      return;
+    }
 
     setUploading(true);
     setMessage(null);

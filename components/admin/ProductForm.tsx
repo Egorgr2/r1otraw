@@ -5,6 +5,7 @@ import {
   CATEGORIES,
   SIZES,
   STORAGE_BUCKET,
+  DISABLE_STORAGE_UPLOAD,
 } from "@/lib/admin";
 import { uploadProductImage } from "@/lib/storage";
 import { supabase, type Product } from "@/lib/supabase";
@@ -66,6 +67,12 @@ export function ProductForm({
     async (files: FileList | File[]) => {
       const list = Array.from(files).filter((f) => f.type.startsWith("image/"));
       if (!list.length) return;
+
+      // Если загрузка в Storage отключена, показываем сообщение
+      if (DISABLE_STORAGE_UPLOAD) {
+        setError("Загрузка файлов временно отключена. Используйте поле 'Или добавьте URL изображения' ниже.");
+        return;
+      }
 
       setUploading(true);
       setError(null);
