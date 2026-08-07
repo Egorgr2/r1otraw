@@ -11,25 +11,44 @@ export async function uploadProductImage(
   productId?: string
 ): Promise<string> {
   const ext = file.name.split(".").pop() ?? "jpg";
-  const folder = productId ?? "drafts";
-  const path = `products/${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).slice(2, 8);
+  // Используем простой путь без вложенных папок
+  const path = `product-${timestamp}-${random}.${ext}`;
 
-  const { error } = await supabase.storage
+  console.log("Загрузка файла:", { path, bucket: STORAGE_BUCKET });
+
+  const { error, data } = await supabase.storage
     .from(STORAGE_BUCKET)
     .upload(path, file, { cacheControl: "3600", upsert: false });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error("Ошибка загрузки:", error);
+    throw new Error(`Ошибка загрузки в Storage: ${error.message}`);
+  }
+
+  console.log("Файл загружен успешно:", data);
   return getPublicUrl(path);
 }
 
 export async function uploadReviewImage(file: File): Promise<string> {
   const ext = file.name.split(".").pop() ?? "jpg";
-  const path = `reviews/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).slice(2, 8);
+  // Используем простой путь без вложенных папок
+  const path = `review-${timestamp}-${random}.${ext}`;
 
-  const { error } = await supabase.storage
+  console.log("Загрузка отзыва:", { path, bucket: STORAGE_BUCKET });
+
+  const { error, data } = await supabase.storage
     .from(STORAGE_BUCKET)
     .upload(path, file, { cacheControl: "3600", upsert: false });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error("Ошибка загрузки отзыва:", error);
+    throw new Error(`Ошибка загрузки в Storage: ${error.message}`);
+  }
+
+  console.log("Отзыв загружен успешно:", data);
   return getPublicUrl(path);
 }
