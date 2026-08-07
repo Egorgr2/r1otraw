@@ -18,10 +18,10 @@ export function CatalogTab() {
       .select("*")
       .eq("is_available", inStock)
       .order("created_at", { ascending: false })
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: Product[] | null; error: any }) => {
         if (!error) setProducts(data ?? []);
-      })
-      .finally(() => setLoading(false));
+        setLoading(false);
+      });
   }, [inStock]);
 
   return (

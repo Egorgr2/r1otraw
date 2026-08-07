@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { Bot, InlineKeyboard } from "grammy";
-import { webhookCallback } from "grammy/webhook";
+import { Bot, InlineKeyboard, webhookCallback } from "grammy";
 
 /*
  * ═══════════════════════════════════════════════════════════════════════════

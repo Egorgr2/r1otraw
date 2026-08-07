@@ -14,10 +14,10 @@ export function ReviewsTab() {
       .from("reviews")
       .select("*")
       .order("created_at", { ascending: false })
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: Review[] | null; error: any }) => {
         if (!error) setReviews(data ?? []);
-      })
-      .finally(() => setLoading(false));
+        setLoading(false);
+      });
   }, []);
 
   if (loading) return <ReviewGridSkeleton />;

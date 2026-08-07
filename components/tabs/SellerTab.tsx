@@ -1,6 +1,6 @@
 "use client";
 
-import WebApp from "@twa-dev/sdk";
+import { useEffect, useState } from "react";
 
 type SellerTabProps = {
   photo: string;
@@ -10,8 +10,20 @@ type SellerTabProps = {
 };
 
 export function SellerTab({ photo, name, description, username }: SellerTabProps) {
+  const [WebApp, setWebApp] = useState<any>(null);
+
+  useEffect(() => {
+    import("@twa-dev/sdk").then((module) => {
+      setWebApp(module.default);
+    });
+  }, []);
+
   const handleWrite = () => {
-    WebApp.openTelegramLink(`https://t.me/${username}`);
+    if (WebApp) {
+      WebApp.openTelegramLink(`https://t.me/${username}`);
+    } else {
+      window.open(`https://t.me/${username}`, "_blank");
+    }
   };
 
   return (

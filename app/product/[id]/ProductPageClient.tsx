@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import WebApp from "@twa-dev/sdk";
 import { ProductGallery } from "@/components/ProductGallery";
 import { SizeSelector } from "@/components/SizeSelector";
 import { ProductPageSkeleton } from "@/components/ui/Skeleton";
@@ -21,6 +20,13 @@ export function ProductPageClient({
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [error, setError] = useState(false);
+  const [WebApp, setWebApp] = useState<any>(null);
+
+  useEffect(() => {
+    import("@twa-dev/sdk").then((module) => {
+      setWebApp(module.default);
+    });
+  }, []);
 
   useEffect(() => {
     supabase
@@ -28,7 +34,7 @@ export function ProductPageClient({
       .select("*")
       .eq("id", productId)
       .single()
-      .then(({ data, error: fetchError }) => {
+      .then(({ data, error: fetchError }: { data: Product | null; error: any }) => {
         if (fetchError || !data) {
           setError(true);
         } else {
@@ -37,8 +43,8 @@ export function ProductPageClient({
             setSelectedSize(data.sizes[0]);
           }
         }
-      })
-      .finally(() => setLoading(false));
+        setLoading(false);
+      });
   }, [productId]);
 
   const handleOrder = () => {
@@ -48,7 +54,12 @@ export function ProductPageClient({
     const text = encodeURIComponent(
       `Привет, Хочу заказать: ${product.title}, размер: ${size}, цена: ${product.price}₴`
     );
-    WebApp.openTelegramLink(`https://t.me/${sellerUsername}?text=${text}`);
+    
+    if (WebApp) {
+      WebApp.openTelegramLink(`https://t.me/${sellerUsername}?text=${text}`);
+    } else {
+      window.open(`https://t.me/${sellerUsername}?text=${text}`, "_blank");
+    }
   };
 
   if (loading) return <ProductPageSkeleton />;
