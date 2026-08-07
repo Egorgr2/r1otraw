@@ -148,7 +148,7 @@ export function Filters({ onFilterChange }: FiltersProps) {
                     onChange={() => toggleBrand(brand)}
                     className="sr-only"
                   />
-                  <span className="text-xs font-medium">{brand}</span>
+                  <span className="text-xs font-bold uppercase">{brand}</span>
                 </label>
               ))}
             </div>

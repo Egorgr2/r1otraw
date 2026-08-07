@@ -1,24 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { HamburgerMenu } from "@/components/HamburgerMenu";
-
-export type Tab = "home" | "catalog" | "reviews" | "seller";
 
 type HeaderProps = {
   shopName: string;
-  activeTab: Tab;
-  onTabChange: (tab: Tab) => void;
 };
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: "home", label: "ГЛАВНАЯ" },
-  { id: "catalog", label: "КАТАЛОГ" },
-  { id: "reviews", label: "ОТЗЫВЫ" },
-  { id: "seller", label: "ПРОДАВЕЦ" },
-];
-
-export function Header({ shopName, activeTab, onTabChange }: HeaderProps) {
+export function Header({ shopName }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -37,29 +27,12 @@ export function Header({ shopName, activeTab, onTabChange }: HeaderProps) {
             </svg>
           </button>
           
-          <h1 className="text-sm font-medium uppercase tracking-street">
+          <Link href="/" className="text-sm font-medium uppercase tracking-street text-white hover:text-muted">
             {shopName}
-          </h1>
+          </Link>
           
           <div className="w-6" /> {/* Spacer for centering */}
         </div>
-        
-        <nav className="flex">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => onTabChange(tab.id)}
-              className={`flex-1 border-b py-3 text-[10px] font-medium uppercase tracking-street transition-colors ${
-                activeTab === tab.id
-                  ? "border-white text-white"
-                  : "border-transparent text-muted"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </nav>
       </header>
       
       {menuOpen && <HamburgerMenu onClose={() => setMenuOpen(false)} />}
