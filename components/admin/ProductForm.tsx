@@ -79,10 +79,10 @@ export function ProductForm({
           return;
         }
         
-        const bucketExists = buckets?.some(b => b.name === STORAGE_BUCKET);
+        const bucketExists = buckets?.some((b: any) => b.name === STORAGE_BUCKET);
         
         if (!bucketExists) {
-          const availableBuckets = buckets?.map(b => b.name).join(", ") || "нет";
+          const availableBuckets = buckets?.map((b: any) => b.name).join(", ") || "нет";
           setError(`Bucket '${STORAGE_BUCKET}' не найден. Доступные: ${availableBuckets}. Создайте bucket 'product-images' или используйте URL-адреса.`);
           return;
         }
