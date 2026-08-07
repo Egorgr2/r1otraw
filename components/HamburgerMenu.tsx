@@ -13,9 +13,10 @@ type MenuItem = {
 
 const MENU_ITEMS: MenuItem[] = [
   {
-    id: "all-clothes",
-    label: "Вся одежда",
+    id: "catalog",
+    label: "Каталог",
     children: [
+      { id: "all", label: "Вся одежда", path: "/catalog" },
       {
         id: "upper-clothes",
         label: "Верхняя одежда",
