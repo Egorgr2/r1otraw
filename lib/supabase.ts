@@ -27,6 +27,14 @@ export type Review = {
   created_at: string;
 };
 
+export type HomePage = {
+  id: string;
+  title: string;
+  featured_product_ids: string[];
+  created_at: string;
+  updated_at: string;
+};
+
 export function getProductImages(product: Product): string[] {
   if (product.images?.length) return product.images;
   if (product.image_url) return [product.image_url];
