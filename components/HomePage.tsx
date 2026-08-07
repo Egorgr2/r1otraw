@@ -1,80 +1,106 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ProductCard } from "@/components/ProductCard";
-import { ProductGridSkeleton } from "@/components/ui/Skeleton";
-import { supabase, type Product, type HomePage } from "@/lib/supabase";
-
 export function HomePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [title, setTitle] = useState("ПОПУЛЯРНЫЕ");
-
-  useEffect(() => {
-    // Сначала получаем настройки главной страницы
-    supabase
-      .from("home_page")
-      .select("*")
-      .single()
-      .then(({ data: homeData, error: homeError }: { data: HomePage | null; error: any }) => {
-        if (!homeError && homeData) {
-          setTitle(homeData.title || "ПОПУЛЯРНЫЕ");
-          
-          // Затем получаем популярные товары
-          if (homeData.featured_product_ids && homeData.featured_product_ids.length > 0) {
-            supabase
-              .from("products")
-              .select("*")
-              .in("id", homeData.featured_product_ids)
-              .then(({ data: productsData, error: productsError }: { data: Product[] | null; error: any }) => {
-                if (!productsError && productsData) {
-                  setProducts(productsData);
-                }
-                setLoading(false);
-              });
-          } else {
-            setLoading(false);
-          }
-        } else {
-          // Если нет настроек, берем последние товары
-          supabase
-            .from("products")
-            .select("*")
-            .order("created_at", { ascending: false })
-            .limit(8)
-            .then(({ data, error }: { data: Product[] | null; error: any }) => {
-              if (!error && data) {
-                setProducts(data);
-              }
-              setLoading(false);
-            });
-        }
-      });
-  }, []);
-
   return (
-    <div className="flex flex-col gap-6 px-4 py-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-base font-bold uppercase tracking-street">
-          {title}
-        </h1>
+    <div className="flex flex-col gap-4 px-4 py-6">
+      <div className="text-center mb-4">
+        <h1 className="text-2xl font-bold uppercase tracking-street mb-2">r1otRaw</h1>
+        <p className="text-xs text-muted max-w-md mx-auto">
+          Здесь публикуются реплики и товары высокого качества. Доступны разные уровни исполнения — от бюджетных до максимально приближенных к оригиналу.
+        </p>
       </div>
 
-      {loading ? (
-        <ProductGridSkeleton />
-      ) : products.length === 0 ? (
-        <div className="flex min-h-[40vh] items-center justify-center px-6 text-center">
-          <p className="text-xs uppercase tracking-wider text-muted">
-            Товары скоро появятся
+      <div className="flex flex-col gap-4">
+        {/* Отзывы */}
+        <div className="border border-surface-border p-4 rounded-lg">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">💬</span>
+            <h2 className="text-xs font-bold uppercase tracking-wider">Отзывы</h2>
+          </div>
+          <a
+            href="https://t.me/otzivir1otraw"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-white hover:text-muted underline"
+          >
+            https://t.me/otzivir1otraw
+          </a>
+        </div>
+
+        {/* Связь */}
+        <div className="border border-surface-border p-4 rounded-lg">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">📩</span>
+            <h2 className="text-xs font-bold uppercase tracking-wider">Связь</h2>
+          </div>
+          <p className="text-xs text-muted">
+            Обратиться: <a href="https://t.me/KOREAGRAVESS" target="_blank" rel="noopener noreferrer" className="text-white hover:text-muted underline">@KOREAGRAVESS</a>
           </p>
         </div>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+
+        {/* Доставка */}
+        <div className="border border-surface-border p-4 rounded-lg">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">🚚</span>
+            <h2 className="text-xs font-bold uppercase tracking-wider">Доставка</h2>
+          </div>
+          <div className="space-y-2 text-xs text-muted">
+            <p>• Украина</p>
+            <p>• Товары в наличии — отправка в течение 1–3 дней</p>
+            <p>• Заказ под выкуп — ориентировочно 14–20 дней</p>
+          </div>
         </div>
-      )}
+
+        {/* Оплата */}
+        <div className="border border-surface-border p-4 rounded-lg">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">💳</span>
+            <h2 className="text-xs font-bold uppercase tracking-wider">Оплата</h2>
+          </div>
+          <div className="space-y-2 text-xs text-muted">
+            <p>1) • Полная предоплата</p>
+            <p>2) • Перед выкупом товара вы оплачиваете 50% его стоимости. После того как товар приходит ко мне и я подтверждаю его наличие фото или видео, вы оплачиваете оставшиеся 50%. Затем я отправляю заказ вам.</p>
+          </div>
+        </div>
+
+        {/* Способы получения */}
+        <div className="border border-surface-border p-4 rounded-lg">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">📦</span>
+            <h2 className="text-xs font-bold uppercase tracking-wider">Способы получения</h2>
+          </div>
+          <div className="space-y-2 text-xs text-muted">
+            <p>• Новая Почта/Укр Почта/Meest</p>
+            <p>• OLX Доставка</p>
+            <p>• Наложенный платеж (предоплата 150 грн)</p>
+          </div>
+        </div>
+
+        {/* Как оформить заказ */}
+        <div className="border border-surface-border p-4 rounded-lg">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">📋</span>
+            <h2 className="text-xs font-bold uppercase tracking-wider">Как оформить заказ</h2>
+          </div>
+          <div className="space-y-2 text-xs text-muted">
+            <p>• Отправьте ссылку или фото товара.</p>
+            <p>• Получите расчет стоимости и сроков.</p>
+            <p>• Подтвердите заказ и оплатите удобным способом.</p>
+          </div>
+        </div>
+
+        {/* Возврат */}
+        <div className="border border-surface-border p-4 rounded-lg">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">🔄</span>
+            <h2 className="text-xs font-bold uppercase tracking-wider">Возврат</h2>
+          </div>
+          <div className="space-y-2 text-xs text-muted">
+            <p>• До момента отправки заказ можно отменить.</p>
+            <p>• При обнаружении заводского брака вопрос решается индивидуально.</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
