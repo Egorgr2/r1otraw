@@ -15,8 +15,6 @@ export function Filters({ onFilterChange }: FiltersProps) {
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [availableBrands, setAvailableBrands] = useState<string[]>([]);
-  const [brandInput, setBrandInput] = useState("");
-  const [showBrandInput, setShowBrandInput] = useState(false);
 
   const STATUSES = [
     { id: "available", label: "Наличие" },
@@ -52,27 +50,6 @@ export function Filters({ onFilterChange }: FiltersProps) {
     setSelectedBrands(newBrands);
     onFilterChange({ statuses: selectedStatuses, brands: newBrands });
   };
-
-  const handleBrandInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setBrandInput(value);
-  };
-
-  const handleAddBrand = () => {
-    if (brandInput.trim() && !availableBrands.includes(brandInput.trim())) {
-      const newBrand = brandInput.trim();
-      setAvailableBrands([...availableBrands, newBrand].sort());
-      setSelectedBrands([...selectedBrands, newBrand]);
-      setBrandInput("");
-      onFilterChange({ statuses: selectedStatuses, brands: [...selectedBrands, newBrand] });
-    }
-  };
-
-  const filteredBrands = brandInput
-    ? availableBrands.filter(brand =>
-      brand.toLowerCase().includes(brandInput.toLowerCase())
-    )
-    : availableBrands;
 
   const hasActiveFilters = selectedStatuses.length > 0 || selectedBrands.length > 0;
 
@@ -151,25 +128,6 @@ export function Filters({ onFilterChange }: FiltersProps) {
                   <span className="text-xs font-bold uppercase">{brand}</span>
                 </label>
               ))}
-            </div>
-
-            {/* Добавление нового бренда */}
-            <div className="mt-3 flex gap-2">
-              <input
-                type="text"
-                value={brandInput}
-                onChange={handleBrandInput}
-                placeholder="Новый бренд..."
-                className="flex-1 border border-surface-border bg-black px-3 py-2 text-xs text-white placeholder:text-muted focus:border-white focus:outline-none rounded"
-              />
-              <button
-                type="button"
-                onClick={handleAddBrand}
-                disabled={!brandInput.trim()}
-                className="px-3 py-2 bg-white text-black text-xs font-bold uppercase tracking-wider rounded disabled:opacity-40"
-              >
-                +
-              </button>
             </div>
           </div>
 
