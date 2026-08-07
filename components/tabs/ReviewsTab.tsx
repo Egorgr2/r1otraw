@@ -34,20 +34,27 @@ export function ReviewsTab() {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-2 px-4 pb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 pb-6">
         {reviews.map((review) => (
           <button
             key={review.id}
             type="button"
             onClick={() => setFullscreen(review.image_url)}
-            className="aspect-square overflow-hidden bg-surface-raised active:opacity-80"
+            className="group flex flex-col active:opacity-80"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={review.image_url}
-              alt="Отзыв"
-              className="h-full w-full object-cover"
-            />
+            <div className="relative aspect-square overflow-hidden rounded-lg bg-surface-raised border border-surface-border">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={review.image_url}
+                alt="Отзыв"
+                className="h-full w-full object-cover transition-transform group-hover:scale-105 group-active:scale-[0.98]"
+              />
+            </div>
+            <div className="mt-3">
+              <button className="w-full bg-white py-2 text-[10px] font-bold uppercase tracking-wider text-black transition-colors hover:bg-gray-200 active:bg-gray-300 rounded">
+                Открыть
+              </button>
+            </div>
           </button>
         ))}
       </div>
