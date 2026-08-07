@@ -71,11 +71,19 @@ export function ProductForm({
       setError(null);
       try {
         // Проверяем, существует ли bucket в Supabase Storage
-        const { data: buckets } = await supabase.storage.listBuckets();
+        const { data: buckets, error: bucketError } = await supabase.storage.listBuckets();
+        
+        if (bucketError) {
+          console.error("Ошибка при получении списка buckets:", bucketError);
+          setError(`Ошибка доступа к Storage: ${bucketError.message}. Проверьте настройки Supabase.`);
+          return;
+        }
+        
         const bucketExists = buckets?.some(b => b.name === STORAGE_BUCKET);
         
         if (!bucketExists) {
-          setError("Сначала создайте bucket 'product-images' в Supabase Storage или используйте URL-адреса изображений");
+          const availableBuckets = buckets?.map(b => b.name).join(", ") || "нет";
+          setError(`Bucket '${STORAGE_BUCKET}' не найден. Доступные: ${availableBuckets}. Создайте bucket 'product-images' или используйте URL-адреса.`);
           return;
         }
 
@@ -86,6 +94,7 @@ export function ProductForm({
         );
         setForm((prev) => ({ ...prev, images: [...prev.images, ...urls] }));
       } catch (err) {
+        console.error("Ошибка загрузки:", err);
         setError(err instanceof Error ? err.message : "Ошибка загрузки");
       } finally {
         setUploading(false);
