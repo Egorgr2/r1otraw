@@ -3,38 +3,18 @@ import { Bot, InlineKeyboard, webhookCallback } from "grammy";
 
 /*
  * ═══════════════════════════════════════════════════════════════════════════
- *  НАСТРОЙКА TELEGRAM-БОТА ПОСЛЕ ДЕПЛОЯ НА VERCEL
+ *  TELEGRAM БОТ (WEBHOOK MODE)
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * 1. ЗАРЕГИСТРИРОВАТЬ WEBHOOK (один раз после деплоя)
- *
- *    Подставьте TELEGRAM_BOT_TOKEN и URL вашего деплоя:
- *
- *    curl -X POST "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook" \
+ * После деплоя нужно настроить webhook:
+ * 
+ * 1. Удалить старый webhook:
+ *    curl -X POST "https://api.telegram.org/bot<TOKEN>/deleteWebhook"
+ * 
+ * 2. Установить новый webhook:
+ *    curl -X POST "https://api.telegram.org/bot<TOKEN>/setWebhook" \
  *      -H "Content-Type: application/json" \
- *      -d '{"url":"https://<your-app>.vercel.app/api/bot"}'
- *
- *    Проверить статус webhook:
- *
- *    curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getWebhookInfo"
- *
- * 2. ПРИВЯЗАТЬ MINI APP ЧЕРЕЗ @BotFather
- *
- *    a) Откройте @BotFather в Telegram
- *    b) Отправьте /mybots → выберите своего бота → Bot Settings → Menu Button
- *       (или сразу /newapp)
- *    c) Команда /newapp:
- *       - Выберите бота
- *       - Title: KOREAGRAVESS (или название магазина)
- *       - Description: короткое описание магазина
- *       - Photo: загрузите логотип (640×360)
- *       - Demo URL / Web App URL: https://<your-app>.vercel.app
- *       - Short name: koreagravessshop (латиница, без пробелов)
- *    d) URL Mini App должен совпадать с WEBAPP_URL в .env
- *
- * Переменные окружения на Vercel:
- *   TELEGRAM_BOT_TOKEN, LOGO_URL, WEBAPP_URL, NEXT_PUBLIC_SHOP_NAME
- * ═══════════════════════════════════════════════════════════════════════════
+ *      -d '{"url":"https://r1otraw-71.vercel.app/api/bot"}'
  */
 
 function createBot() {
@@ -43,7 +23,14 @@ function createBot() {
 
   const bot = new Bot(token);
 
+  // Логирование для отладки
+  bot.use((ctx, next) => {
+    console.log("Received update:", JSON.stringify(ctx.update, null, 2));
+    return next();
+  });
+
   bot.command("start", async (ctx) => {
+    console.log("Handling /start command");
     const logoUrl = process.env.LOGO_URL;
     const webAppUrl = process.env.WEBAPP_URL;
     const shopName = process.env.NEXT_PUBLIC_SHOP_NAME ?? "Resale Shop";
@@ -59,17 +46,23 @@ function createBot() {
       webAppUrl ?? "https://your-app.vercel.app"
     );
 
-    if (logoUrl) {
-      await ctx.replyWithPhoto(logoUrl, {
-        caption,
-        reply_markup: keyboard,
-      });
-    } else {
-      await ctx.reply(caption, { reply_markup: keyboard });
+    try {
+      if (logoUrl) {
+        await ctx.replyWithPhoto(logoUrl, {
+          caption,
+          reply_markup: keyboard,
+        });
+      } else {
+        await ctx.reply(caption, { reply_markup: keyboard });
+      }
+      console.log("/start command handled successfully");
+    } catch (error) {
+      console.error("Error handling /start:", error);
     }
   });
 
   bot.command("help", async (ctx) => {
+    console.log("Handling /help command");
     const shopName = process.env.NEXT_PUBLIC_SHOP_NAME ?? "Resale Shop";
     const webAppUrl = process.env.WEBAPP_URL;
 
@@ -85,10 +78,16 @@ function createBot() {
       webAppUrl ?? "https://your-app.vercel.app"
     );
 
-    await ctx.reply(helpText, { reply_markup: keyboard });
+    try {
+      await ctx.reply(helpText, { reply_markup: keyboard });
+      console.log("/help command handled successfully");
+    } catch (error) {
+      console.error("Error handling /help:", error);
+    }
   });
 
   bot.on("message:text", async (ctx) => {
+    console.log("Handling text message");
     const webAppUrl = process.env.WEBAPP_URL;
     const shopName = process.env.NEXT_PUBLIC_SHOP_NAME ?? "Resale Shop";
 
@@ -97,20 +96,23 @@ function createBot() {
       webAppUrl ?? "https://your-app.vercel.app"
     );
 
-    await ctx.reply(
-      `Напишите /start для открытия ${shopName}`,
-      { reply_markup: keyboard }
-    );
+    try {
+      await ctx.reply(
+        `Напишите /start для открытия ${shopName}`,
+        { reply_markup: keyboard }
+      );
+      console.log("Text message handled successfully");
+    } catch (error) {
+      console.error("Error handling text message:", error);
+    }
   });
 
   return bot;
 }
 
-type WebhookHandler = (request: Request) => Response | Promise<Response>;
+let handleUpdate: any = null;
 
-let handleUpdate: WebhookHandler | null = null;
-
-function getHandler(): WebhookHandler {
+function getHandler() {
   if (!handleUpdate) {
     handleUpdate = webhookCallback(createBot(), "std/http");
   }
@@ -118,7 +120,10 @@ function getHandler(): WebhookHandler {
 }
 
 export async function POST(request: Request) {
+  console.log("Received POST request to /api/bot");
+  
   if (!process.env.TELEGRAM_BOT_TOKEN) {
+    console.error("TELEGRAM_BOT_TOKEN is not configured");
     return NextResponse.json(
       { error: "TELEGRAM_BOT_TOKEN is not configured" },
       { status: 500 }
@@ -126,7 +131,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    return await getHandler()(request);
+    const response = await getHandler()(request);
+    console.log("Response sent successfully");
+    return response;
   } catch (error) {
     console.error("Bot webhook error:", error);
     return NextResponse.json({ error: "Webhook handler failed" }, { status: 500 });
@@ -135,7 +142,9 @@ export async function POST(request: Request) {
 
 export async function GET() {
   return NextResponse.json({
-    status: "Telegram bot webhook is active",
+    status: "Telegram bot webhook is ready",
     endpoint: "/api/bot",
+    commands: ["/start", "/help"],
+    instructions: "Make sure webhook is set to: https://r1otraw-71.vercel.app/api/bot"
   });
 }
