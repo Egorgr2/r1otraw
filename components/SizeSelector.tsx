@@ -8,18 +8,18 @@ export function SizeSelector({ sizes, selected, onSelect }: SizeSelectorProps) {
   if (sizes.length === 0) return null;
 
   return (
-    <div className="flex flex-col gap-3">
-      <p className="text-[10px] uppercase tracking-wider text-muted">Размер</p>
-      <div className="flex flex-wrap gap-2">
+    <div className="flex flex-col gap-4">
+      <p className="text-xs font-bold uppercase tracking-wider text-white">Выберите размер</p>
+      <div className="flex flex-wrap gap-3">
         {sizes.map((size) => (
           <button
             key={size}
             type="button"
             onClick={() => onSelect(size)}
-            className={`w-12 h-12 flex items-center justify-center border text-xs font-bold uppercase tracking-wider transition-colors rounded ${
+            className={`w-14 h-14 flex items-center justify-center border-2 text-sm font-bold uppercase tracking-wider transition-all rounded-lg hover:scale-105 ${
               selected === size
-                ? "border-white bg-white text-black"
-                : "border-surface-border text-white hover:border-white"
+                ? "border-white bg-white text-black shadow-lg shadow-white/20"
+                : "border-surface-border text-white hover:border-white/50"
             }`}
           >
             {size}

@@ -94,56 +94,71 @@ export function ProductPageClient({
         </Link>
       </div>
 
-      <ProductGallery images={images} title={product.title} />
-
-      <div className="flex flex-col gap-6 px-4 py-6">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <h1 className="text-base font-bold uppercase tracking-wide">
-              {product.title}
-            </h1>
-            <p className="mt-2 text-2xl font-bold">{product.price} ₴</p>
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Левая колонка - галерея */}
+          <div className="md:sticky md:top-20 md:self-start">
+            <ProductGallery images={images} title={product.title} />
           </div>
-          {product.is_new && (
-            <span className="bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-black rounded">
-              NEW
-            </span>
-          )}
-        </div>
 
-        {(product.brand || product.category) && (
-          <div className="flex gap-4 text-xs text-muted">
-            {product.brand && (
-              <p>
-                <span className="uppercase tracking-wider">Бренд: </span>
-                {product.brand}
-              </p>
+          {/* Правая колонка - информация */}
+          <div className="flex flex-col gap-6">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h1 className="text-xl md:text-2xl font-bold uppercase tracking-wide">
+                  {product.title}
+                </h1>
+                <p className="mt-3 text-3xl md:text-4xl font-bold">{product.price} ₴</p>
+              </div>
+              {product.is_new && (
+                <span className="bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-black rounded hidden md:block">
+                  NEW
+                </span>
+              )}
+            </div>
+
+            {/* Mobile NEW badge */}
+            {product.is_new && (
+              <span className="bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-black rounded md:hidden w-fit">
+                NEW
+              </span>
             )}
-            {product.category && (
-              <p>
-                <span className="uppercase tracking-wider">Категория: </span>
-                {product.category}
-              </p>
+
+            {(product.brand || product.category) && (
+              <div className="flex flex-wrap gap-4 text-sm text-muted">
+                {product.brand && (
+                  <p>
+                    <span className="uppercase tracking-wider">Бренд: </span>
+                    {product.brand}
+                  </p>
+                )}
+                {product.category && (
+                  <p>
+                    <span className="uppercase tracking-wider">Категория: </span>
+                    {product.category}
+                  </p>
+                )}
+              </div>
             )}
+
+            <div className="border-t border-surface-border pt-6">
+              <SizeSelector
+                sizes={sizes}
+                selected={selectedSize}
+                onSelect={setSelectedSize}
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={handleOrder}
+              disabled={sizes.length > 0 && !selectedSize}
+              className="w-full bg-white py-4 text-[12px] md:text-sm font-bold uppercase tracking-street text-black transition-opacity disabled:cursor-not-allowed disabled:opacity-40 active:opacity-80 rounded-lg"
+            >
+              ЗАКАЗАТЬ
+            </button>
           </div>
-        )}
-
-        <div className="border-t border-surface-border pt-6">
-          <SizeSelector
-            sizes={sizes}
-            selected={selectedSize}
-            onSelect={setSelectedSize}
-          />
         </div>
-
-        <button
-          type="button"
-          onClick={handleOrder}
-          disabled={sizes.length > 0 && !selectedSize}
-          className="w-full bg-white py-4 text-[12px] font-bold uppercase tracking-street text-black transition-opacity disabled:cursor-not-allowed disabled:opacity-40 active:opacity-80 rounded-lg"
-        >
-          ЗАКАЗАТЬ
-        </button>
       </div>
     </div>
   );

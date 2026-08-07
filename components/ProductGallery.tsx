@@ -29,18 +29,18 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-square items-center justify-center bg-surface-raised text-xs text-muted">
+      <div className="flex aspect-square items-center justify-center bg-surface-raised text-xs text-muted rounded-lg">
         Нет фото
       </div>
     );
   }
 
   return (
-    <div className="px-4 py-4">
+    <div className="px-0 py-0">
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex aspect-square snap-x snap-mandatory overflow-x-auto scrollbar-hide rounded-lg overflow-hidden"
+        className="flex aspect-square snap-x snap-mandatory overflow-x-auto scrollbar-hide rounded-xl overflow-hidden border border-surface-border"
       >
         {images.map((src, i) => (
           // eslint-disable-next-line @next/next/no-img-element
@@ -55,14 +55,14 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
       </div>
 
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pt-3 scrollbar-hide">
+        <div className="flex gap-3 overflow-x-auto pt-4 scrollbar-hide">
           {images.map((src, i) => (
             <button
               key={src + i}
               type="button"
               onClick={() => scrollTo(i)}
-              className={`h-16 w-16 shrink-0 overflow-hidden border-2 rounded-lg transition-colors ${
-                activeIndex === i ? "border-white" : "border-surface-border opacity-60"
+              className={`h-20 w-20 shrink-0 overflow-hidden border-2 rounded-lg transition-all hover:scale-105 ${
+                activeIndex === i ? "border-white scale-105" : "border-surface-border opacity-60"
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
